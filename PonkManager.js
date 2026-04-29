@@ -165,9 +165,9 @@ function point(frameData, pathIndex, x, y, red = 255, green = 255, blue = 255) {
   pushPoint(frameData, x, y, red, green, blue);
 }
 
-function sendFrame(frameData) {
+function sendFrame(frameData, senderName, senderId) {
   //compute chunck counts 
- let chunksCount64 = 1 + Math.floor(frameData.length / (PONK_MAX_CHUNK_SIZE - GeomUdpHeader.SIZE));
+  let chunksCount64 = 1 + Math.floor(frameData.length / (PONK_MAX_CHUNK_SIZE - GeomUdpHeader.SIZE));
   if (chunksCount64 > 255) {
     console.error("Protocol doesn't accept sending a packet that would be splitted in more than 255 chunks");
   }
@@ -190,7 +190,12 @@ function sendFrame(frameData) {
     newHeader.chunkNumber = chunkNumber;
     newHeader.dataCrc = crc;
 
-
+    if (senderName) {
+      newHeader.senderName = senderName;
+    }
+    if (senderId) {
+      newHeader.senderIdentifier = senderId;
+    }
 
     // Prepare buffer
     let packetChuncks = [];

@@ -82,6 +82,8 @@ function setPath(frameData, pathIndex, points, red = 255, green = 255, blue = 25
 }
 
 function setVertices(frameData, pathIndex, vertices, position, rotation, red = 255, green = 255, blue = 255, close = true) {
+
+function setVertices(frameData, pathIndex, vertices, position, rotation, red = 255, green = 255, blue = 255, close = true, scaleWidth = 1, scaleHeight = 1) {
   push8bits(frameData, PONK_DATA_FORMAT_XY_F32_RGB_U8); // Write Format Data
   push8bits(frameData, 2); // Write meta data count
   pushMetaData(frameData, "PATHNUMB", Math.round(pathIndex));
@@ -92,16 +94,14 @@ function setVertices(frameData, pathIndex, vertices, position, rotation, red = 2
     let vertex = vertices[i]
     vertex = rotatePoint(vertex, rotation)
     vertex = translatePoint(vertex, position.x, position.y)
-    //warning AME : scale should be passed as argument 
-    vertex = scalePoint(vertex, 20, 20, 1, 1)
+    vertex = scalePoint(vertex, scaleWidth, scaleHeight, 1, 1)
     pushPoint(frameData, vertex.x, vertex.y, red, green, blue);
   }
   if (close) {
     let vertex = vertices[0]
     vertex = rotatePoint(vertex, rotation)
     vertex = translatePoint(vertex, position.x, position.y)
-    //warning AME : scale should be passed as argument 
-    vertex = scalePoint(vertex, 20, 20, 1, 1)
+    vertex = scalePoint(vertex, scaleWidth, scaleHeight, 1, 1)
     pushPoint(frameData, vertex.x, vertex.y, red, green, blue);
   }
 

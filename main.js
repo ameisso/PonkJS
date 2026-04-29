@@ -25,5 +25,16 @@ setInterval(function () {
     let blue = Math.abs(Math.sin(2 * Math.PI * Date.now() / 5000)) * 255
     ponkManager.setPath(frame, i, [p1, p2, p3, p1], red, green, blue)
   }
-  ponkManager.sendFrame(frame)
+  ponkManager.sendFrame(frame, "triangles", 1)
+}, 16)
+
+setInterval(function () {
+  let frame = []
+  let iMax = 3
+  for (let i = 0; i < iMax; i++) {
+    let cx = Math.sin(2 * Math.PI * Date.now() / 5000 + 2 * Math.PI * i / iMax) / 2
+    let cy = Math.cos(2 * Math.PI * Date.now() / 5000 + 2 * Math.PI * i / iMax) / 2
+    ponkManager.circle(frame, i, cx, cy,0.5 / 2)
+  }
+  ponkManager.sendFrame(frame, "circle", 2)
 }, 16)

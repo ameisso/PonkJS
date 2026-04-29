@@ -13,7 +13,7 @@ let PONK_SERVER_NAME = "SimplePonk"
 let frameCount = 0
 var sender;
 
-export default { connect, sendFrame, setServerName, setPath, setVertices, circle, line, rect, triangle, point }
+export default { connect, sendFrame, setServerName, setPath, setPathWithColors, setVertices, circle, line, lineWithColors, rect, triangle, point }
 
 
 class GeomUdpHeader {
@@ -81,7 +81,18 @@ function setPath(frameData, pathIndex, points, red = 255, green = 255, blue = 25
   }
 }
 
-function setVertices(frameData, pathIndex, vertices, position, rotation, red = 255, green = 255, blue = 255, close = true) {
+function setPathWithColors(frameData, pathIndex, points, colors) {
+  push8bits(frameData, PONK_DATA_FORMAT_XY_F32_RGB_U8); // Write Format Data
+  push8bits(frameData, 2); // Write meta data count
+  pushMetaData(frameData, "PATHNUMB", Math.round(pathIndex));
+  pushMetaData(frameData, "MAXSPEED", 0.1);
+  push16bits(frameData, points.length);
+
+  for (let point in points) {
+    pushPoint(frameData, points[point][0], points[point][1], colors[point].r, colors[point].g, colors[point].b);
+  }
+}
+
 
 function setVertices(frameData, pathIndex, vertices, position, rotation, red = 255, green = 255, blue = 255, close = true, scaleWidth = 1, scaleHeight = 1) {
   push8bits(frameData, PONK_DATA_FORMAT_XY_F32_RGB_U8); // Write Format Data
@@ -122,6 +133,13 @@ function line(frameData, pathIndex, x1, y1, x2, y2, red = 255, green = 255, blue
   let startPoint = [x1, y1];
   let endPoint = [x2, y2];
   setPath(frameData, pathIndex, [startPoint, endPoint], red, green, blue)
+}
+
+
+function lineWithColors(frameData, pathIndex, x1, y1, x2, y2, sRed = 255, sGreen = 255, sBlue = 255, eRed = 255, eGreen = 255, eBlue = 255) {
+  let startPoint = [x1, y1];
+  let endPoint = [x2, y2];
+  setPathWithColors(frameData, pathIndex, [startPoint, endPoint], [{ r: sRed, g: sGreen, b: sBlue }, { r: eRed, g: eGreen, b: eBlue }])
 }
 
 function triangle(frameData, pathIndex, cx, cy, r, red = 255, green = 255, blue = 255) {

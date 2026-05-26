@@ -25,7 +25,7 @@ setInterval(function () {
     let blue = Math.abs(Math.sin(2 * Math.PI * Date.now() / 5000)) * 255
     ponkManager.setPath(frame, i, [p1, p2, p3, p1], red, green, blue)
   }
-  ponkManager.sendFrame(frame, "triangles", 1)
+  ponkManager.sendFrame(frame, "PONKJS", 42)
 }, 16)
 
 setInterval(function () {
